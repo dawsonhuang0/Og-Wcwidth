@@ -1,0 +1,55 @@
+{
+  "name": "og-wcwidth",
+  "version": "1.0.0",
+  "description": "TypeScript port of wcwidth for Node.js, faithfully replicating Markus Kuhn's implementation.",
+  "keywords": [
+    "wcwidth",
+    "wcswidth",
+    "unicode",
+    "string",
+    "width",
+    "terminal",
+    "ansi",
+    "cjk",
+    "east-asian",
+    "fullwidth",
+    "halfwidth",
+    "combining",
+    "characters",
+    "grapheme",
+    "cluster",
+    "monospace",
+    "wide-char",
+    "narrow-char",
+    "char-width",
+    "codepoint",
+    "typescript",
+    "javascript",
+    "nodejs",
+    "cli",
+    "tput",
+    "printf",
+    "console",
+    "tty",
+    "text-alignment",
+    "string-utils",
+    "unicode-width",
+    "character-width",
+    "markus-kuhn"
+  ],
+  "homepage": "https://github.com/dawsonhuang0/Og-Wcwidth#readme",
+  "bugs": {
+    "url": "https://github.com/dawsonhuang0/Og-Wcwidth/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dawsonhuang0/Og-Wcwidth.git"
+  },
+  "license": "MIT",
+  "author": "Dawson Huang",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+}
