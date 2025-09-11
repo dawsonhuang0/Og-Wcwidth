@@ -5,9 +5,9 @@ import {
   wcswidth,
   wcwidthCjk,
   wcswidthCjk
-} from "./wcwidth";
+} from "./src/index";
 
-const DONE = '\x1b[1mOK\x1b[0m';
+const OK = '\x1b[1mOK\x1b[0m';
 
 // Test wcwidth function
 process.stdout.write('wcwidth     ');
@@ -31,7 +31,7 @@ assert.strictEqual(wcwidth(0xFF21), 2, 'Fullwidth "A" should have width 2');
 // Combining characters (width 0)
 assert.strictEqual(wcwidth(0x0300), 0, 'Combining grave accent should have width 0');
 
-console.log(DONE);
+console.log(OK);
 
 // Test wcswidth function
 process.stdout.write('wcswidth    ');
@@ -51,7 +51,7 @@ assert.strictEqual(wcswidth('hello\x07world'), -1, 'String with control char sho
 assert.strictEqual(wcswidth('hello', 3), 3, '"hello" limited to 3 chars should have width 3');
 assert.strictEqual(wcswidth('你好世', 2), 4, 'Chinese limited to 2 chars should have width 4');
 
-console.log(DONE);
+console.log(OK);
 
 // Test wcwidthCjk function
 process.stdout.write('wcwidthCjk  ');
@@ -71,7 +71,7 @@ assert.strictEqual(wcwidthCjk(0x00B0), 2, 'Degree sign should have width 2 in CJ
 assert.strictEqual(wcwidth(0x00A1), 1, 'Inverted exclamation should have width 1 in regular mode');
 assert.notEqual(wcwidthCjk(0x00A1), wcwidth(0x00A1), 'CJK and regular should differ for ambiguous chars');
 
-console.log(DONE);
+console.log(OK);
 
 // Test wcswidthCjk function
 process.stdout.write('wcswidthCjk ');
@@ -87,7 +87,7 @@ assert.strictEqual(wcswidth('°C'), 2, '"°C" should have width 2 in regular mod
 // With length limit
 assert.strictEqual(wcswidthCjk('°±÷', 2), 4, 'Ambiguous chars limited to 2 should have width 4 in CJK mode');
 
-console.log(DONE);
+console.log(OK);
 
 // Edge cases and error conditions
 process.stdout.write('Edge cases  ');
@@ -121,6 +121,6 @@ assert.strictEqual(wcwidth(0x10FFFF), 1, 'Max Unicode code point should have wid
 assert.strictEqual(wcswidth('', 0), 0, 'Empty string with limit 0 should return 0');
 assert.strictEqual(wcswidth('test', 0), 0, 'Any string with limit 0 should return 0');
 
-console.log(DONE);
+console.log(OK);
 
 console.log('🎉 All tests passed!');

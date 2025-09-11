@@ -62,8 +62,6 @@
  * 
  * Dawson Huang -- 11 Sep 2025
  * Translated wcwidth implementation from C to TypeScript.
- * 
- * Permissions remain the same as above.
  */
 
 /* The following two functions define the column width of an ISO 10646
