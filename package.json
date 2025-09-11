@@ -48,11 +48,20 @@
   "license": "MIT",
   "author": "Dawson Huang",
   "type": "commonjs",
-  "main": "index.js",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "tsx test.ts",
+    "build": "tsc"
   },
   "devDependencies": {
-    "@types/node": "^24.3.1"
+    "@types/node": "^24.3.1",
+    "tsx": "^4.20.5",
+    "typescript": "^5.9.2"
   }
 }
