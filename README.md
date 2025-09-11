@@ -5,6 +5,10 @@ implementations, replicating the original C code for Unicode terminal width
 handling.  
 These functions are defined in IEEE Std 1003.1 (POSIX).
 
+Unlike other ports, og-wcwidth intentionally provides **no customizations**.  
+It is a direct, TypeScript-first translation of Markus Kuhn’s `wcwidth.c`, 
+ensuring strict adherence to the original logic and Unicode width rules.
+
 ### References:
 - [OpenGroup wcwidth()](http://www.opengroup.org/onlinepubs/007904975/functions/wcwidth.html)  
 - [OpenGroup wcswidth()](http://www.opengroup.org/onlinepubs/007904975/functions/wcswidth.html)
