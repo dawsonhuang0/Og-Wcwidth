@@ -1,7 +1,7 @@
 {
   "name": "og-wcwidth",
   "version": "1.0.0",
-  "description": "TypeScript port of wcwidth for Node.js, faithfully replicating Markus Kuhn's implementation.",
+  "description": "JavaScript port of wcwidth for Node.js, faithfully replicating Markus Kuhn's implementation.",
   "keywords": [
     "wcwidth",
     "wcswidth",
@@ -51,5 +51,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "devDependencies": {
+    "@types/node": "^24.3.1"
   }
 }
