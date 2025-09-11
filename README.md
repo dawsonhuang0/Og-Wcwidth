@@ -1,4 +1,4 @@
-# Og-wcwidth
+# Og-Wcwidth
 
 A TypeScript/JavaScript port of Markus Kuhn’s **wcwidth** and **wcswidth** 
 implementations, replicating the original C code for Unicode terminal width 
