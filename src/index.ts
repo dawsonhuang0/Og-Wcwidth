@@ -71,7 +71,7 @@ export function wcwidth(char: string): number {
 
   // binary search in table of non-spacing characters
   const isCombining = (ucs: number): boolean =>
-    ucs <= 0x10ffff && ((combining[ucs >> 5] >>> (ucs & 31)) & 1) !== 0;
+    ucs <= 0x10ffff && ((combining(ucs >> 5) >>> (ucs & 31)) & 1) !== 0;
 
   if (isCombining(ucs))
     return 0;
