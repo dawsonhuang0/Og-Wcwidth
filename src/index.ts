@@ -126,21 +126,19 @@ export function wcwidth(char: string): number {
  * @returns The total display width in terminal columns.
  */
 export function wcswidth(str: string, n?: number): number {
-  const pwcs = Array.from(str);
-
-  n = Math.min(n ?? pwcs.length, pwcs.length);
-  if (!n) return 0;
+  if (!str) return 0;
 
   let width = 0;
-  let w: number;
+  let count = 0;
 
-  for (let c = 0; c < n; c++) {
-    const char = pwcs[c];
+  for (const char of str) {
+    if (n !== undefined && count >= n) break;
 
-    if ((w = wcwidth(char)) < 0)
-      return -1;
-    else
-      width += w;
+    const w = wcwidth(char);
+    if (w < 0) return -1;
+
+    width += w;
+    count++;
   }
 
   return width;
@@ -252,21 +250,19 @@ export function wcwidthCjk(char: string): number {
  * @returns Total display width in terminal cells, or -1 on error.
  */
 export function wcswidthCjk(str: string, n?: number): number {
-  const pwcs = Array.from(str);
-
-  n = Math.min(n ?? pwcs.length, pwcs.length);
-  if (!n) return 0;
+  if (!str) return 0;
 
   let width = 0;
-  let w: number;
+  let count = 0;
 
-  for (let c = 0; c < n; c++) {
-    const char = pwcs[c];
+  for (const char of str) {
+    if (n !== undefined && count >= n) break;
 
-    if ((w = wcwidthCjk(char)) < 0)
-      return -1;
-    else
-      width += w;
+    const w = wcwidthCjk(char);
+    if (w < 0) return -1;
+
+    width += w;
+    count++;
   }
 
   return width;
