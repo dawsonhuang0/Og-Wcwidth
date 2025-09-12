@@ -120,4 +120,82 @@ assert.strictEqual(wcswidth('test', 0), 0, 'Any string with limit 0 should retur
 
 console.log(OK);
 
+// Extreme Unicode / glibc WIDTH conformance
+process.stdout.write('glibc-ext   ');
+
+// Astral combining marks (Variation Selectors Supplement)
+assert.strictEqual(wcwidth('\u{E0100}'), 0, 'Variation Selector-17 (astral) should be width 0');
+assert.strictEqual(wcwidth('\u{E01EF}'), 0, 'Variation Selector-256 (astral) should be width 0');
+
+// Default ignorable code points
+assert.strictEqual(wcwidth('\u2060'), 0, 'Word Joiner should be width 0');
+assert.strictEqual(wcwidth('\uFEFF'), 0, 'Zero Width No-Break Space should be width 0');
+
+// East Asian Wide/Fullwidth ranges
+assert.strictEqual(wcwidth('\uFE13'), 2, 'Presentation form (U+FE13) should be width 2');
+assert.strictEqual(wcwidth('\u{20000}'), 2, 'CJK Extension B (U+20000) should be width 2');
+assert.strictEqual(wcwidth('\u{2FFFD}'), 2, 'Last CJK Extension B (U+2FFFD) should be width 2');
+
+// East Asian Ambiguous
+assert.strictEqual(wcwidthCjk('Ω'), 2, 'Greek Omega should be width 2 in CJK mode');
+assert.strictEqual(wcwidth('Ω'), 1, 'Greek Omega should be width 1 in regular mode');
+assert.notEqual(wcwidthCjk('Ω'), wcwidth('Ω'), 'CJK and regular should differ for Omega');
+
+// Hangul edge cases
+assert.strictEqual(wcwidth('\u115F'), 2, 'Hangul Choseong Filler (U+115F) should be width 2');
+assert.strictEqual(wcwidth('\u3164'), 1, 'Hangul Filler (U+3164) should be width 1');
+
+// Consistency: wcswidth = sum of wcwidth
+const seq = 'a\u0300\u{E0100}一'; // "a" + combining grave + astral selector + CJK
+let sum = 0;
+for (const c of seq) sum += wcwidth(c);
+assert.strictEqual(wcswidth(seq), sum, 'wcswidth should equal sum of wcwidth per codepoint');
+
+console.log(OK);
+
+// Paranoid boundary + noncharacter tests
+process.stdout.write('glibc-par   ');
+
+// --- Range edge tests ---
+
+// CJK block starts at U+2E80, ends at U+A4CF (except U+303F)
+assert.strictEqual(wcwidth('\u2E80'), 2, 'U+2E80 (CJK Radicals) should be width 2');
+assert.strictEqual(wcwidth('\uA4CF'), 2, 'U+A4CF (Yi Radicals end) should be width 2');
+assert.strictEqual(wcwidth('\u303F'), 1, 'U+303F (CJK Half Fill Space) is exception width 1');
+
+// Fullwidth/compatibility forms
+assert.strictEqual(wcwidth('\uFF01'), 2, 'U+FF01 (Fullwidth Exclamation) should be width 2');
+assert.strictEqual(wcwidth('\uFF60'), 2, 'U+FF60 (Fullwidth Right White Parenthesis) should be width 2');
+assert.strictEqual(wcwidth('\uFFE6'), 2, 'U+FFE6 (Fullwidth Won Sign) should be width 2');
+
+// Astral CJK Extension B range
+assert.strictEqual(wcwidth('\u{20000}'), 2, 'U+20000 (CJK Ext B start) should be width 2');
+assert.strictEqual(wcwidth('\u{2FFFD}'), 2, 'U+2FFFD (CJK Ext B end) should be width 2');
+
+// Astral CJK Extension C/D/E/F ranges (spot check starts)
+assert.strictEqual(wcwidth('\u{30000}'), 2, 'U+30000 (CJK Ext G start) should be width 2');
+assert.strictEqual(wcwidth('\u{3FFFD}'), 2, 'U+3FFFD (CJK Ext G end) should be width 2');
+
+// --- Noncharacters ---
+
+// Plane 0 noncharacters
+assert.strictEqual(wcwidth('\uFDD0'), 1, 'U+FDD0 noncharacter should be width 1');
+assert.strictEqual(wcwidth('\uFDEF'), 1, 'U+FDEF noncharacter should be width 1');
+assert.strictEqual(wcwidth('\uFFFE'), 1, 'U+FFFE noncharacter should be width 1');
+assert.strictEqual(wcwidth('\uFFFF'), 1, 'U+FFFF noncharacter should be width 1');
+
+// Plane 1 noncharacters
+assert.strictEqual(wcwidth('\u{1FFFE}'), 1, 'U+1FFFE noncharacter should be width 1');
+assert.strictEqual(wcwidth('\u{1FFFF}'), 1, 'U+1FFFF noncharacter should be width 1');
+
+// Last plane noncharacters
+assert.strictEqual(wcwidth('\u{10FFFE}'), 1, 'U+10FFFE noncharacter should be width 1');
+assert.strictEqual(wcwidth('\u{10FFFF}'), 1, 'U+10FFFF noncharacter should be width 1');
+
+// --- Random ignorable sanity checks ---
+assert.strictEqual(wcwidth('\u2064'), 0, 'U+2064 INVISIBLE PLUS should be width 0');
+assert.strictEqual(wcwidth('\uFFF9'), 0, 'U+FFF9 INTERLINEAR ANNOTATION ANCHOR should be width 0');
+
+console.log(OK);
+
 console.log('🎉 All tests passed!');
