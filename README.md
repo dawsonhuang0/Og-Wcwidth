@@ -1,5 +1,7 @@
 # Og-Wcwidth
 
+[![npm](https://img.shields.io/npm/v/og-wcwidth.svg)](https://www.npmjs.com/package/og-wcwidth)
+
 A TypeScript/JavaScript port of Markus Kuhn’s **wcwidth** and **wcswidth** 
 implementations, replicating the original C code for Unicode terminal width 
 handling.  
