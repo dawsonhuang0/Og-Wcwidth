@@ -1,6 +1,6 @@
 {
   "name": "og-wcwidth",
-  "version": "1.1.2",
+  "version": "1.2.0",
   "description": "Unicode text width calculation (wcwidth/wcswidth) for Node.js and TypeScript, based on Markus Kuhn's reference.",
   "keywords": [
     "wcwidth",
