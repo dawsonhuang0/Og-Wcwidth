@@ -1,10 +1,9 @@
-# Og-Wcwidth
+# Wcwidth-O1
 
-[![npm](https://img.shields.io/npm/v/og-wcwidth.svg)](https://www.npmjs.com/package/og-wcwidth)
+[![npm](https://img.shields.io/npm/v/wcwidth-o1.svg)](https://www.npmjs.com/package/wcwidth-o1)
 
 A TypeScript/JavaScript port of Markus Kuhn’s **wcwidth** and **wcswidth** 
-implementations, replicating the original C code for Unicode terminal width 
-handling.  
+implementations, optimized to O(1).  
 These functions are defined in IEEE Std 1003.1 (POSIX).
 
 ### Superior Performance
@@ -18,10 +17,10 @@ These functions are defined in IEEE Std 1003.1 (POSIX).
 
 ## Getting Started
 
-Install Og-Wcwidth via npm:
+Install Wcwidth-O1 via npm:
 
 ```bash
-npm i og-wcwidth
+npm i wcwidth-o1
 ```
 
 
@@ -30,7 +29,7 @@ npm i og-wcwidth
 <h3>JavaScript / TypeScript:</h3>
 
 ```ts
-import wcwidth from 'og-wcwidth';
+import wcwidth from 'wcwidth-o1';
 
 const example1 = wcwidth('a'); // 1
 const example2 = wcwidth('好'); // 2
@@ -40,7 +39,7 @@ const example3 = wcwidth('😊'); // 2
 or
 
 ```ts
-import { wcwidth, wcswidth, wcswidthCjk } from 'og-wcwidth';
+import { wcwidth, wcswidth, wcswidthCjk } from 'wcwidth-o1';
 
 const example = wcwidth('a'); // 1
 
@@ -89,7 +88,7 @@ See [Unicode TR#11](http://www.unicode.org/unicode/reports/tr11/) for more detai
 ## Feedback
 
 Found something odd?  
-Feel free to [open an issue](https://github.com/dawsonhuang0/Og-Wcwidth/issues).
+Feel free to [open an issue](https://github.com/dawsonhuang0/Wcwidth-O1/issues).
 
 
 ## Acknowledgments

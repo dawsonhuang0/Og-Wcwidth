@@ -1,7 +1,7 @@
 {
-  "name": "og-wcwidth",
+  "name": "wcwidth-o1",
   "version": "1.2.1",
-  "description": "Unicode text width calculation (wcwidth/wcswidth) for Node.js and TypeScript, based on Markus Kuhn's reference.",
+  "description": "Unicode text width calculation (wcwidth/wcswidth) for Node.js and TypeScript, optimized to O(1), based on Markus Kuhn's reference.",
   "keywords": [
     "wcwidth",
     "wcswidth",
@@ -37,13 +37,13 @@
     "character-width",
     "markus-kuhn"
   ],
-  "homepage": "https://github.com/dawsonhuang0/Og-Wcwidth#readme",
+  "homepage": "https://github.com/dawsonhuang0/Wcwidth-O1#readme",
   "bugs": {
-    "url": "https://github.com/dawsonhuang0/Og-Wcwidth/issues"
+    "url": "https://github.com/dawsonhuang0/Wcwidth-O1/issues"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/dawsonhuang0/Og-Wcwidth.git"
+    "url": "git+https://github.com/dawsonhuang0/Wcwidth-O1.git"
   },
   "license": "MIT",
   "author": "Dawson Huang",
