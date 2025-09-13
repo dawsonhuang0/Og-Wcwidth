@@ -13,7 +13,8 @@
  * Translated wcwidth implementation from C to TypeScript.
  * 
  * Dawson Huang -- 13 Sep 2025
- * Optimized wcwidth and wcswidth implementation by adopting bitset lookup.
+ * - Optimized wcwidth and wcswidth implementation by adopting bitset lookup.
+ * - Extended combining ranges to full Unicode 15.1 coverage.
  */
 
 import { combining } from "./combining";
