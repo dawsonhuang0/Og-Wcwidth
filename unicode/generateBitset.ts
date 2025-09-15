@@ -7,6 +7,7 @@
  */
 
 import fs from "fs";
+import path from "path";
 import https from "https";
 
 const UNICODE_VERSION = "17.0.0";
@@ -178,8 +179,8 @@ async function main() {
     };\n`
   ].join("\n");
 
-  fs.writeFileSync("combining.ts", combiningOut);
-  console.log("Done! combining.ts generated.");
+  fs.writeFileSync(path.join("unicode", "combining.ts"), combiningOut);
+  console.log("Generated: unicode/combining.ts");
 
   // === Write ambiguous.ts ===
   function expandRanges(ranges: [number, number][]): Set<number> {
@@ -210,8 +211,10 @@ async function main() {
     };\n`,
   ].join('\n');
 
-  fs.writeFileSync("ambiguous.ts", ambiguousOut);
-  console.log("Done! ambiguous.ts generated.");
+  fs.writeFileSync(path.join("unicode", "ambiguous.ts"), ambiguousOut);
+  console.log("Generated: unicode/ambiguous.ts");
+
+  console.log('Bitset generation completed.');
 }
 
 main().catch((err) => {
