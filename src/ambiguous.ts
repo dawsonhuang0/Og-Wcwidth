@@ -1,24 +1,18 @@
 /**
- * Bitset accessor for East Asian Ambiguous characters.
+ * Bitset accessor for East Asian Ambiguous characters (Unicode 17.0.0).
  *
  * - Uses `ambiguousMap` for sparse bitset lookups.
- * - Handles large continuous ranges with inline checks to reduce table size.
+ * - Returns 0 if a block has no ambiguous characters.
  *
  * @param idx Codepoint block index (ucs >> 5)
- * @returns 32-bit mask of ambiguous characters for this block, or -1 for
- *          special-case ranges not stored in the map.
+ * @returns 32-bit mask of ambiguous characters for this block
  */
-export function ambiguous(idx: number): number {
-  return (
-    idx === 33 ||
-    (291 <= idx && idx <= 297 && idx !== 295) ||
-    (1792 <= idx && idx <= 1991) ||
-    (30720 <= idx && idx <= 34814 && idx !== 32767)
-  ) ? -1 : (ambiguousMap[idx] ?? 0);
-}
+export const ambiguous = (idx: number): number =>
+  (1792 <= idx && idx <= 1991) || (30720 <= idx && idx <= 34814 && idx !== 32767)
+    ? -1 : (ambiguousMap[idx] ?? 0);
 
-const ambiguousMap: Record<number, number> = {
-  5: -136362606,
+export const ambiguousMap: Record<number, number> = {
+  5: -136354414,
   6: -1048510400,
   7: 1468872515,
   8: 134873090,
@@ -29,10 +23,15 @@ const ambiguousMap: Record<number, number> = {
   18: 131072,
   19: 2,
   22: -1358877040,
+  24: -1,
+  25: -1,
+  26: -1,
+  27: 65535,
   28: -131072,
   29: -130053,
   30: 1019,
   32: -65534,
+  33: -1,
   34: 196607,
   256: 863567872,
   257: 1210908919,
@@ -43,7 +42,7 @@ const ambiguousMap: Record<number, number> = {
   265: 2118,
   266: 2014838784,
   267: 67047423,
-  268: 67043328,
+  268: 67043840,
   269: 50331648,
   270: 1310720,
   271: 128,
@@ -54,19 +53,46 @@ const ambiguousMap: Record<number, number> = {
   276: 35651788,
   277: -2147483616,
   280: 262144,
+  291: -1,
+  292: -1,
+  293: -1,
+  294: -1,
   295: -1025,
+  296: -1,
+  297: -1,
   298: -61441,
   299: 1048575,
   300: 3997695,
   301: 818676731,
   302: 248259,
   303: 32828,
-  304: 1345372768,
+  304: 1342227040,
   306: 5,
   307: 47035,
+  308: -1073741824,
+  309: -2147483648,
+  310: -1065024,
+  311: -606864629,
   313: 536870912,
   315: -4194304,
+  346: 62914560,
+  402: 65280,
+  2032: 65535,
   2047: 536870912,
+  3976: -63489,
+  3977: -49153,
+  3978: -1,
+  3979: -64513,
+  3980: -134103041,
+  3981: 8191,
+  28680: -1,
+  28681: -1,
+  28682: -1,
+  28683: -1,
+  28684: -1,
+  28685: -1,
+  28686: -1,
+  28687: 65535,
   32767: 1073741823,
   34815: 1073741823
-}
+};
