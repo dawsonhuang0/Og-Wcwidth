@@ -8,7 +8,7 @@ These functions are defined in IEEE Std 1003.1 (POSIX).
 
 ### Superior Performance
 - ⚡️ Instant *O*(1) lookup time
-- 🌏 Full Unicode 15.1 coverage
+- 🌏 Full Unicode 17.0 coverage
 
 ### References:
 - [OpenGroup wcwidth()](http://www.opengroup.org/onlinepubs/007904975/functions/wcwidth.html)  
