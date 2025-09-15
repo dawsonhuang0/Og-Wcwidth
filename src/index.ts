@@ -15,6 +15,9 @@
  * Dawson Huang -- 13 Sep 2025
  * - Optimized wcwidth and wcswidth implementation by adopting bitset lookup.
  * - Extended combining ranges to full Unicode 15.1 coverage.
+ *
+ * Dawson Huang -- 16 Sep 2025
+ * Extended combining and ambiguous ranges to full Unicode 17.0 coverage.
  */
 
 import { combining } from "./combining";
