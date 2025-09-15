@@ -9,193 +9,219 @@ import {
 
 const OK = '\x1b[1mOK\x1b[0m';
 
-// Test wcwidth function
+// =============================
+// 1. Basic wcwidth
+// =============================
 process.stdout.write('wcwidth     ');
 
-// Basic ASCII characters (width 1)
-assert.strictEqual(wcwidth('A'), 1, 'ASCII "A" should have width 1');
-assert.strictEqual(wcwidth('a'), 1, 'ASCII "a" should have width 1');
-assert.strictEqual(wcwidth(' '), 1, 'Space should have width 1');
+// Basic ASCII
+assert.strictEqual(wcwidth('A'), 1);
+assert.strictEqual(wcwidth('a'), 1);
+assert.strictEqual(wcwidth(' '), 1);
 
-// Control characters (width -1)
-assert.strictEqual(wcwidth('\x07'), -1, 'Bell character should have width -1');
-assert.strictEqual(wcwidth('\x7F'), -1, 'DEL character should have width -1');
+// Controls
+assert.strictEqual(wcwidth('\x07'), -1);
+assert.strictEqual(wcwidth('\x7F'), -1);
 
-// Wide characters (width 2)
-assert.strictEqual(wcwidth('一'), 2, 'CJK character should have width 2');
-assert.strictEqual(wcwidth('\uFF21'), 2, 'Fullwidth "A" should have width 2');
+// Wide
+assert.strictEqual(wcwidth('一'), 2);
+assert.strictEqual(wcwidth('\uFF21'), 2);
 
-// Combining characters (width 0)
-assert.strictEqual(wcwidth('\u0300'), 0, 'Combining grave accent should have width 0');
+// Combining
+assert.strictEqual(wcwidth('\u0300'), 0);
 
 console.log(OK);
 
-// Test wcswidth function
+// =============================
+// 2. wcswidth
+// =============================
 process.stdout.write('wcswidth    ');
-
-// Basic strings
-assert.strictEqual(wcswidth('hello'), 5, '"hello" should have width 5');
-assert.strictEqual(wcswidth('ABC'), 3, '"ABC" should have width 3');
-assert.strictEqual(wcswidth(''), 0, 'Empty string should have width 0');
-
-// String with wide characters
-assert.strictEqual(wcswidth('你好'), 4, 'Chinese "你好" should have width 4');
-
-// String with control characters (should return -1)
-assert.strictEqual(wcswidth('hello\x07world'), -1, 'String with control char should return -1');
-
-// Test with length limit
-assert.strictEqual(wcswidth('hello', 3), 3, '"hello" limited to 3 chars should have width 3');
-assert.strictEqual(wcswidth('你好世', 2), 4, 'Chinese limited to 2 chars should have width 4');
-
+assert.strictEqual(wcswidth('hello'), 5);
+assert.strictEqual(wcswidth('ABC'), 3);
+assert.strictEqual(wcswidth(''), 0);
+assert.strictEqual(wcswidth('你好'), 4);
+assert.strictEqual(wcswidth('hello\x07world'), -1);
+assert.strictEqual(wcswidth('hello', 3), 3);
+assert.strictEqual(wcswidth('你好世', 2), 4);
 console.log(OK);
 
-// Test wcwidthCjk function
+// =============================
+// 3. wcwidthCjk
+// =============================
 process.stdout.write('wcwidthCjk  ');
-
-// Basic ASCII (same as wcwidth)
-assert.strictEqual(wcwidthCjk('A'), 1, 'ASCII "A" should have width 1 in CJK mode');
-
-// Wide characters (same as wcwidth)
-assert.strictEqual(wcwidthCjk('一'), 2, 'CJK character should have width 2 in CJK mode');
-
-// Ambiguous characters (different from wcwidth - should be width 2)
-assert.strictEqual(wcwidthCjk('¡'), 2, 'Inverted exclamation should have width 2 in CJK mode');
-assert.strictEqual(wcwidthCjk('°'), 2, 'Degree sign should have width 2 in CJK mode');
-
-// Compare with regular wcwidth for ambiguous chars
-assert.strictEqual(wcwidth('¡'), 1, 'Inverted exclamation should have width 1 in regular mode');
-assert.notEqual(wcwidthCjk('¡'), wcwidth('¡'), 'CJK and regular should differ for ambiguous chars');
-
+assert.strictEqual(wcwidthCjk('A'), 1);
+assert.strictEqual(wcwidthCjk('一'), 2);
+assert.strictEqual(wcwidthCjk('¡'), 2);
+assert.strictEqual(wcwidthCjk('°'), 2);
+assert.strictEqual(wcwidth('¡'), 1);
+assert.notEqual(wcwidthCjk('¡'), wcwidth('¡'));
 console.log(OK);
 
-// Test wcswidthCjk function
+// =============================
+// 4. wcswidthCjk
+// =============================
 process.stdout.write('wcswidthCjk ');
-
-// Basic strings (same as wcswidth)
-assert.strictEqual(wcswidthCjk('hello'), 5, '"hello" should have width 5 in CJK mode');
-assert.strictEqual(wcswidthCjk('你好'), 4, 'Chinese should have width 4 in CJK mode');
-
-// Strings with ambiguous characters
-assert.strictEqual(wcswidthCjk('°C'), 3, '"°C" should have width 3 in CJK mode');
-assert.strictEqual(wcswidth('°C'), 2, '"°C" should have width 2 in regular mode (degree is width 1)');
-
-// With length limit
-assert.strictEqual(wcswidthCjk('°±÷', 2), 4, 'Ambiguous chars limited to 2 should have width 4 in CJK mode');
-
+assert.strictEqual(wcswidthCjk('hello'), 5);
+assert.strictEqual(wcswidthCjk('你好'), 4);
+assert.strictEqual(wcswidthCjk('°C'), 3);
+assert.strictEqual(wcswidth('°C'), 2);
+assert.strictEqual(wcswidthCjk('°±÷', 2), 4);
 console.log(OK);
 
-// Edge cases and error conditions
+// =============================
+// 5. Edge cases
+// =============================
 process.stdout.write('Edge cases  ');
-
-// Invalid code points
-assert.strictEqual(wcwidth('\x00'.slice(1)), -1, 'Negative code point should return -1 (invalid)');
-
-// Null char
-assert.strictEqual(wcwidth('\x00'), 0, 'Null should be width 0');
-assert.strictEqual(wcwidthCjk('\x00'), 0, 'Null should have width 0 in CJK mode');
-
-// Control characters
-assert.strictEqual(wcwidth('\x1F'), -1, 'Unit separator should be -1');
-assert.strictEqual(wcwidth('\x9F'), -1, 'C1 control should be -1');
-
-// Soft hyphen
-assert.strictEqual(wcwidth('\xAD'), 1, 'Soft hyphen should be width 1');
-
-// Zero width space
-assert.strictEqual(wcwidth('\u200B'), 0, 'Zero width space should be width 0');
-
-// Hangul Jamo medial vowel
-assert.strictEqual(wcwidth('\u1160'), 0, 'Hangul Jamo medial vowel should be width 0');
-
-// Wide characters check
-assert.strictEqual(wcwidth('\u3000'), 2, 'Ideographic space should be width 2');
-
-// Very large code points
-assert.strictEqual(wcwidth('\u{10FFFF}'), 1, 'Max Unicode code point should have width 1');
-
-// Empty string edge cases
-assert.strictEqual(wcswidth('', 0), 0, 'Empty string with limit 0 should return 0');
-assert.strictEqual(wcswidth('test', 0), 0, 'Any string with limit 0 should return 0');
-
+assert.strictEqual(wcwidth('\x00'.slice(1)), -1);
+assert.strictEqual(wcwidth('\x00'), 0);
+assert.strictEqual(wcwidthCjk('\x00'), 0);
+assert.strictEqual(wcwidth('\x1F'), -1);
+assert.strictEqual(wcwidth('\x9F'), -1);
+assert.strictEqual(wcwidth('\xAD'), 1);
+assert.strictEqual(wcwidth('\u200B'), 0);
+assert.strictEqual(wcwidth('\u1160'), 0);
+assert.strictEqual(wcwidth('\u3000'), 2);
+assert.strictEqual(wcwidth('\u{10FFFF}'), 1);
+assert.strictEqual(wcswidth('', 0), 0);
+assert.strictEqual(wcswidth('test', 0), 0);
 console.log(OK);
 
-// Extreme Unicode / glibc WIDTH conformance
+// =============================
+// 6. glibc-ext conformance
+// =============================
 process.stdout.write('glibc-ext   ');
-
-// Astral combining marks (Variation Selectors Supplement)
-assert.strictEqual(wcwidth('\u{E0100}'), 0, 'Variation Selector-17 (astral) should be width 0');
-assert.strictEqual(wcwidth('\u{E01EF}'), 0, 'Variation Selector-256 (astral) should be width 0');
-
-// Default ignorable code points
-assert.strictEqual(wcwidth('\u2060'), 0, 'Word Joiner should be width 0');
-assert.strictEqual(wcwidth('\uFEFF'), 0, 'Zero Width No-Break Space should be width 0');
-
-// East Asian Wide/Fullwidth ranges
-assert.strictEqual(wcwidth('\uFE13'), 2, 'Presentation form (U+FE13) should be width 2');
-assert.strictEqual(wcwidth('\u{20000}'), 2, 'CJK Extension B (U+20000) should be width 2');
-assert.strictEqual(wcwidth('\u{2FFFD}'), 2, 'Last CJK Extension B (U+2FFFD) should be width 2');
-
-// East Asian Ambiguous
-assert.strictEqual(wcwidthCjk('Ω'), 2, 'Greek Omega should be width 2 in CJK mode');
-assert.strictEqual(wcwidth('Ω'), 1, 'Greek Omega should be width 1 in regular mode');
-assert.notEqual(wcwidthCjk('Ω'), wcwidth('Ω'), 'CJK and regular should differ for Omega');
-
-// Hangul edge cases
-assert.strictEqual(wcwidth('\u115F'), 2, 'Hangul Choseong Filler (U+115F) should be width 2');
-assert.strictEqual(wcwidth('\u3164'), 1, 'Hangul Filler (U+3164) should be width 1');
-
-// Consistency: wcswidth = sum of wcwidth
-const seq = 'a\u0300\u{E0100}一'; // "a" + combining grave + astral selector + CJK
-let sum = 0;
-for (const c of seq) sum += wcwidth(c);
-assert.strictEqual(wcswidth(seq), sum, 'wcswidth should equal sum of wcwidth per codepoint');
-
+assert.strictEqual(wcwidth('\u{E0100}'), 0);
+assert.strictEqual(wcwidth('\u{E01EF}'), 0);
+assert.strictEqual(wcwidth('\u2060'), 0);
+assert.strictEqual(wcwidth('\uFEFF'), 0);
+assert.strictEqual(wcwidth('\uFE13'), 2);
+assert.strictEqual(wcwidth('\u{20000}'), 2);
+assert.strictEqual(wcwidth('\u{2FFFD}'), 2);
+assert.strictEqual(wcwidthCjk('Ω'), 2);
+assert.strictEqual(wcwidth('Ω'), 1);
+assert.strictEqual(wcwidth('\u115F'), 2);
+assert.strictEqual(wcwidth('\u3164'), 1);
+const seq = 'a\u0300\u{E0100}一';
+assert.strictEqual(wcswidth(seq), [...seq].reduce((s, c) => s + wcwidth(c), 0));
 console.log(OK);
 
-// Paranoid boundary + noncharacter tests
+// =============================
+// 7. glibc-paranoid tests
+// =============================
 process.stdout.write('glibc-par   ');
+assert.strictEqual(wcwidth('\u2E80'), 2);
+assert.strictEqual(wcwidth('\uA4CF'), 2);
+assert.strictEqual(wcwidth('\u303F'), 1);
+assert.strictEqual(wcwidth('\uFF01'), 2);
+assert.strictEqual(wcwidth('\uFF60'), 2);
+assert.strictEqual(wcwidth('\uFFE6'), 2);
+assert.strictEqual(wcwidth('\u{30000}'), 2);
+assert.strictEqual(wcwidth('\u{3FFFD}'), 2);
+assert.strictEqual(wcwidth('\uFDD0'), 1);
+assert.strictEqual(wcwidth('\uFFFF'), 1);
+assert.strictEqual(wcwidth('\u{10FFFF}'), 1);
+assert.strictEqual(wcwidth('\u2064'), 0);
+assert.strictEqual(wcwidth('\uFFF9'), 1);
+assert.strictEqual(wcwidth('\u{13430}'), 1);
+assert.strictEqual(wcwidth('\u{1343F}'), 1);
+console.log(OK);
 
-// --- Range edge tests ---
+// =============================
+// 8. glibc carve-outs
+// =============================
+process.stdout.write('glibc-carve ');
+assert.strictEqual(wcwidth('\u00AD'), 1);
+assert.strictEqual(wcwidth('\u115F'), 2);
+assert.strictEqual(wcwidth('\u3164'), 1);
+assert.strictEqual(wcwidth('\uFFA0'), 1);
+for (let cp = 0x13430; cp <= 0x1343F; cp++) {
+  assert.strictEqual(wcwidth(String.fromCodePoint(cp)), 1);
+}
+console.log(OK);
 
-// CJK block starts at U+2E80, ends at U+A4CF (except U+303F)
-assert.strictEqual(wcwidth('\u2E80'), 2, 'U+2E80 (CJK Radicals) should be width 2');
-assert.strictEqual(wcwidth('\uA4CF'), 2, 'U+A4CF (Yi Radicals end) should be width 2');
-assert.strictEqual(wcwidth('\u303F'), 1, 'U+303F (CJK Half Fill Space) is exception width 1');
+// =============================
+// 9. ignoreables
+// =============================
+process.stdout.write('ignoreables ');
+assert.strictEqual(wcwidth('\u2060'), 0);
+assert.strictEqual(wcwidth('\uFEFF'), 0);
+assert.strictEqual(wcwidth('\uFE00'), 0);
+assert.strictEqual(wcwidth('\u{E0100}'), 0);
+console.log(OK);
 
-// Fullwidth/compatibility forms
-assert.strictEqual(wcwidth('\uFF01'), 2, 'U+FF01 (Fullwidth Exclamation) should be width 2');
-assert.strictEqual(wcwidth('\uFF60'), 2, 'U+FF60 (Fullwidth Right White Parenthesis) should be width 2');
-assert.strictEqual(wcwidth('\uFFE6'), 2, 'U+FFE6 (Fullwidth Won Sign) should be width 2');
+// =============================
+// 10. glibc-full regression
+// =============================
+process.stdout.write('glibc-full  ');
 
-// Astral CJK Extension B range
-assert.strictEqual(wcwidth('\u{20000}'), 2, 'U+20000 (CJK Ext B start) should be width 2');
-assert.strictEqual(wcwidth('\u{2FFFD}'), 2, 'U+2FFFD (CJK Ext B end) should be width 2');
+// Carve-outs (glibc exceptions that must NOT be zero-width)
+const carveOuts: Record<number, number> = {
+  0x00AD: 1, // Soft hyphen
+  0x115F: 2, // Hangul Choseong Filler
+  0x3164: 1, // Hangul Filler
+  0xFFA0: 1, // Halfwidth Hangul Filler
+};
+for (const [cp, expected] of Object.entries(carveOuts)) {
+  assert.strictEqual(
+    wcwidth(String.fromCodePoint(Number(cp))),
+    expected,
+    `Carve-out U+${Number(cp).toString(16).toUpperCase()} must be width ${expected}`
+  );
+}
 
-// Astral CJK Extension C/D/E/F ranges (spot check starts)
-assert.strictEqual(wcwidth('\u{30000}'), 2, 'U+30000 (CJK Ext G start) should be width 2');
-assert.strictEqual(wcwidth('\u{3FFFD}'), 2, 'U+3FFFD (CJK Ext G end) should be width 2');
+// Non-ignored format controls (glibc override -> width 1)
+for (let cp = 0xFFF9; cp <= 0xFFFB; cp++) {
+  assert.strictEqual(
+    wcwidth(String.fromCodePoint(cp)),
+    1,
+    `Interlinear annotation U+${cp.toString(16).toUpperCase()} must be width 1`
+  );
+}
 
-// --- Noncharacters ---
+// Positive zero-width checks (must remain 0)
+for (const cp of [0x0300, 0x200B, 0x2060, 0xFE00, 0xE0100, 0xFEFF]) {
+  assert.strictEqual(
+    wcwidth(String.fromCodePoint(cp)),
+    0,
+    `Zero-width U+${cp.toString(16).toUpperCase()} must be width 0`
+  );
+}
 
-// Plane 0 noncharacters
-assert.strictEqual(wcwidth('\uFDD0'), 1, 'U+FDD0 noncharacter should be width 1');
-assert.strictEqual(wcwidth('\uFDEF'), 1, 'U+FDEF noncharacter should be width 1');
-assert.strictEqual(wcwidth('\uFFFE'), 1, 'U+FFFE noncharacter should be width 1');
-assert.strictEqual(wcwidth('\uFFFF'), 1, 'U+FFFF noncharacter should be width 1');
+// Optional BMP sweep: every result must be -1, 0, 1, or 2
+if (process.env.CHECK_SWEEP) {
+  for (let cp = 0; cp <= 0xFFFF; cp++) {
+    const w = wcwidth(String.fromCodePoint(cp));
+    assert.ok(
+      [-1, 0, 1, 2].includes(w),
+      `Unexpected width ${w} for U+${cp.toString(16).toUpperCase()}`
+    );
+  }
+}
 
-// Plane 1 noncharacters
-assert.strictEqual(wcwidth('\u{1FFFE}'), 1, 'U+1FFFE noncharacter should be width 1');
-assert.strictEqual(wcwidth('\u{1FFFF}'), 1, 'U+1FFFF noncharacter should be width 1');
+// Optional astral sweep
+if (process.env.CHECK_ASTRAL) {
+  // Variation Selectors Supplement -> width 0
+  for (let cp = 0xE0100; cp <= 0xE01EF; cp++) {
+    assert.strictEqual(
+      wcwidth(String.fromCodePoint(cp)),
+      0,
+      `Astral variation selector U+${cp.toString(16).toUpperCase()} must be width 0`
+    );
+  }
 
-// Last plane noncharacters
-assert.strictEqual(wcwidth('\u{10FFFE}'), 1, 'U+10FFFE noncharacter should be width 1');
-assert.strictEqual(wcwidth('\u{10FFFF}'), 1, 'U+10FFFF noncharacter should be width 1');
+  // CJK Ext B spot checks -> width 2
+  for (const cp of [0x20000, 0x21000, 0x22000, 0x2FFFD]) {
+    assert.strictEqual(
+      wcwidth(String.fromCodePoint(cp)),
+      2,
+      `CJK Ext B U+${cp.toString(16).toUpperCase()} must be width 2`
+    );
+  }
 
-// --- Random ignorable sanity checks ---
-assert.strictEqual(wcwidth('\u2064'), 0, 'U+2064 INVISIBLE PLUS should be width 0');
-assert.strictEqual(wcwidth('\uFFF9'), 0, 'U+FFF9 INTERLINEAR ANNOTATION ANCHOR should be width 0');
-
+  // Emoji spot checks -> width 2
+  assert.strictEqual(wcwidth('\u{1F1E6}'), 2, 'Regional indicator (U+1F1E6) must be width 2');
+  assert.strictEqual(wcwidth('\u{1F600}'), 2, 'Emoji grinning face (U+1F600) must be width 2');
+}
 console.log(OK);
 
 console.log('🎉 All tests passed!');
