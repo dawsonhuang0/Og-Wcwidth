@@ -60,6 +60,55 @@ const example4 = wcswidthCjk('°C'); // 3
 - `n`: Max characters to process (defaults to full length).
 
 
+## Updating Unicode Data
+
+When a new Unicode version is released, the `ambiguous` and `combining` lookup bitsets must be regenerated.
+
+### 1. Generate new bitsets
+
+```bash
+npx tsx unicode/generateBitset.ts
+```
+
+This will produce updated `ambiguous.ts` and `combining.ts` files under `unicode/`.
+
+### 2. Optimize repetitive masks
+
+Example of unoptimized output:
+
+```ts
+export const ambiguous = (idx: number): number => ambiguousMap[idx] ?? 0;
+
+const map: Record<number, number> = {
+  1: 2947937,
+  2: -1,
+  3: -1,
+  4: -1,
+  ... // assume 5-99 are -1
+  100: -1,
+  101: 394231
+};
+```
+
+Optimized version:
+
+```ts
+export const ambiguous = (idx: number): number =>
+  2 <= idx && idx <= 100 ? -1 : (ambiguousMap[idx] ?? 0);
+
+// example
+const map: Record<number, number> = {
+  1: 2947937,
+  101: 394231
+};
+```
+
+### 3. Replace files
+
+Copy the optimized `ambiguous.ts` and `combining.ts` into `src/`.  
+The Unicode update is then complete.
+
+
 ## Behind Wcwidth
 
 In fixed-width terminals, most Latin characters take up one column, while East 
