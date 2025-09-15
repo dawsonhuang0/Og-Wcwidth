@@ -163,10 +163,13 @@ async function main() {
   const combiningMap = generateBitset(all);
   const combiningOut = [
     '/**',
-    ` * Lookup function for combining/zero-width characters (Unicode ${UNICODE_VERSION}).`,
+    ` * Bitset accessor for combining/zero-width characters (Unicode ${UNICODE_VERSION}).`,
     ' *',
-    ' * - Retrieves the 32-bit mask for a given Unicode block index.',
-    ' * - Falls back to 0 if the block has no zero-width characters.',
+    ' * - Uses `combiningMap` for sparse bitset lookups.',
+    ' * - Returns 0 if a block has no zero-width characters, or -1 for carve-outs.',
+    ' *',
+    ' * @param idx Codepoint block index (ucs >> 5)',
+    ' * @returns 32-bit mask of zero-width characters for this block, or -1',
     ' */',
     'export const combining = (idx: number): number => combiningMap[idx] ?? 0;',
     '',
@@ -192,7 +195,7 @@ async function main() {
 
   const ambiguousOut = [
     '/**',
-    ' * Bitset accessor for East Asian Ambiguous characters.',
+    ` * Bitset accessor for East Asian Ambiguous characters (Unicode ${UNICODE_VERSION}).`,
     ' *',
     ' * - Uses `ambiguousMap` for sparse bitset lookups.',
     ' * - Returns 0 if a block has no ambiguous characters.',
