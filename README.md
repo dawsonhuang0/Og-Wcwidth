@@ -2,17 +2,17 @@
 
 [![npm](https://img.shields.io/npm/v/wcwidth-o1.svg)](https://www.npmjs.com/package/wcwidth-o1)
 
-A TypeScript/JavaScript port of Markus Kuhn’s **wcwidth** and **wcswidth** 
-implementations, optimized to O(1).  
-These functions are defined in IEEE Std 1003.1 (POSIX).
+A TypeScript/JavaScript implementation of glibc’s `wcwidth(3)` and `wcswidth(3)`, optimized to *O(1)*.  
+Conforms to [POSIX.1-2008 (IEEE Std 1003.1)](https://pubs.opengroup.org/onlinepubs/9699919799/) for 
+terminal column width calculation.
 
 ### Superior Performance
 - ⚡️ Instant *O*(1) lookup time
 - 🌏 Full Unicode 17.0 coverage
 
 ### References:
-- [OpenGroup wcwidth()](http://www.opengroup.org/onlinepubs/007904975/functions/wcwidth.html)  
-- [OpenGroup wcswidth()](http://www.opengroup.org/onlinepubs/007904975/functions/wcswidth.html)
+- [OpenGroup wcwidth()](https://pubs.opengroup.org/onlinepubs/9699919799/functions/wcwidth.html)  
+- [OpenGroup wcswidth()](https://pubs.opengroup.org/onlinepubs/9699919799/functions/wcswidth.html)
 
 
 ## Getting Started
@@ -39,74 +39,77 @@ const example3 = wcwidth('😊'); // 2
 or
 
 ```ts
-import { wcwidth, wcswidth, wcswidthCjk } from 'wcwidth-o1';
+import { wcwidth, wcswidth } from 'wcwidth-o1';
 
 const example = wcwidth('a'); // 1
 
 const example1 = wcswidth('hi'); // 2
 const example2 = wcswidth('안녕하세요'); // 10
 const example3 = wcswidth('😊こんにちは'); // 12
-
-const example4 = wcswidthCjk('°C'); // 3
 ```
 
 ### Function Parameters:
 
-**wcwidth()**, **wcwidthCjk()**:
+**wcwidth()**:
 - `char`: A single-character string to measure.
 
-**wcswidth()**, **wcswidthCjk()**:
+**wcswidth()**:
 - `str`: Input string to evaluate.
 - `n`: Max characters to process (defaults to full length).
 
 
-## Updating Unicode Data
+## Updating Lookup Table
 
-When a new Unicode version is released, the `ambiguous` and `combining` lookup bitsets must be regenerated.
+When a new Unicode version is released, the lookup table must be regenerated to follow the latest character width definitions.
 
-### 1. Generate new bitsets
+### 1. Prerequisites
+
+- glibc-based Linux distro (e.g. Debian).
+- Any C compiler (e.g. GCC, Clang).
+
+### 2. Clone glibc to local
 
 ```bash
-npx tsx unicode/generateBitset.ts
+git clone https://sourceware.org/git/glibc.git
 ```
 
-This will produce updated `ambiguous.ts` and `combining.ts` files under `unicode/`.
+### 3. Generate new lookup table
 
-### 2. Optimize repetitive masks
+In the same directory as `glibc/`, compile `genTable.c`.  
+Using GCC as an example:
 
-Example of unoptimized output:
-
-```ts
-export const ambiguous = (idx: number): number => ambiguousMap[idx] ?? 0;
-
-const map: Record<number, number> = {
-  1: 2947937,
-  2: -1,
-  3: -1,
-  4: -1,
-  ... // assume 5-99 are -1
-  100: -1,
-  101: 394231
-};
+```bash
+gcc genTable.c -o genTable
 ```
 
-Optimized version:
+If the compilation succeeds, `genTable` will be generated in the current directory. If not, ensure all [prerequisites](#1-prerequisites) are satisfied.
 
-```ts
-export const ambiguous = (idx: number): number =>
-  2 <= idx && idx <= 100 ? -1 : (ambiguousMap[idx] ?? 0);
+Then run:
 
-// example
-const map: Record<number, number> = {
-  1: 2947937,
-  101: 394231
-};
+```bash
+./genTable
 ```
 
-### 3. Replace files
+Once the generation is complete, you should see:
 
-Copy the optimized `ambiguous.ts` and `combining.ts` into `src/`.  
-The Unicode update is then complete.
+```bash
+table.ts generated successfully.
+```
+
+and you're set to proceed to [step 4](#4-replace-files).
+
+If your environment is not glibc-based, you'll see:
+
+```bash
+warning: This program requires glibc, please compile on a glibc-based Linux distro (e.g. Debian).
+```
+
+Switching to a glibc-based Linux distro should fix the issue.
+
+### 4. Replace files
+
+Copy the generated `table.ts` into `src/`.  
+The lookup table update is then complete.
 
 
 ## Behind Wcwidth
@@ -142,7 +145,9 @@ Feel free to [open an issue](https://github.com/dawsonhuang0/Wcwidth-O1/issues).
 
 ## Acknowledgments
 
-- Original [implementation](http://www.cl.cam.ac.uk/~mgk25/ucs/wcwidth.c) by Markus Kuhn. 
+- Original `wcwidth` and `wcswidth` specifications defined by [POSIX.1-2008 (IEEE Std 1003.1)](https://pubs.opengroup.org/onlinepubs/9699919799/functions/wcwidth.html).  
+- Behavior and results are derived from the GNU [glibc](https://sourceware.org/glibc/) implementation.  
+- Historical reference: [Markus Kuhn’s wcwidth.c](http://www.cl.cam.ac.uk/~mgk25/ucs/wcwidth.c), which inspired most Unicode width logic used today.
 
 ## License
 
