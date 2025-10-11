@@ -165,15 +165,26 @@ int main(void) {
 
   fprintf(
     out,
-    "\n\nfor (const cp of cp0) widths[cp] = 0;"
-    "\nfor (const cp of cp1) widths[cp] = 1;"
-    "\nfor (const cp of cp2) widths[cp] = 2;\n"
-    "\nfor (const [start, end] of range0)"
-    "\n  for (let cp = start; cp <= end; cp++) widths[cp] = 0;\n"
-    "\nfor (const [start, end] of range1)"
-    "\n  for (let cp = start; cp <= end; cp++) widths[cp] = 1;\n"
-    "\nfor (const [start, end] of range2)"
-    "\n  for (let cp = start; cp <= end; cp++) widths[cp] = 2;\n"
+    "\n\nconst cps = [cp0, cp1, cp2];"
+    "\nfor (let i = 0; i <= 2; i++) {"
+    "\n  let curr = 0;"
+    "\n  for (const cp of cps[i]) {"
+    "\n    curr += cp;"
+    "\n    widths[curr] = i;"
+    "\n  }"
+    "\n}\n"
+    "\nconst ranges = [range0, range1, range2];"
+    "\nfor (let i = 0; i <= 2; i++) {"
+    "\n  let curr = 0;"
+    "\n  for (let j = 0; j < ranges[i].length; j += 2) {"
+    "\n    const start = curr + ranges[i][j];"
+    "\n    const end = start + ranges[i][j + 1];"
+    "\n    for (let cp = start; cp <= end; cp++) {"
+    "\n      widths[cp] = i;"
+    "\n    }"
+    "\n    curr = end;"
+    "\n  }"
+    "\n}\n"
     "\n// ---------- Build lookup table ----------"
     "\nconst SHIFT2 = 5;"
     "\nconst SHIFT1 = 11;"
@@ -274,8 +285,11 @@ static void pushCP(unsigned int **arr, size_t *count, size_t *capacity, unsigned
 static void writeCP(FILE *out, unsigned int *codepoints, size_t cp_count) {
   fprintf(out, "[");
 
-  for (size_t i = 0; i < cp_count; i++) {
-    fprintf(out, "%d", codepoints[i]);
+  if (cp_count != 0) fprintf(out, "%d", codepoints[0]);
+  if (cp_count > 1) fprintf(out, ",");
+
+  for (size_t i = 1; i < cp_count; i++) {
+    fprintf(out, "%d", codepoints[i] - codepoints[i - 1]);
     if (i != cp_count - 1) fprintf(out, ",");
   }
 
@@ -285,8 +299,11 @@ static void writeCP(FILE *out, unsigned int *codepoints, size_t cp_count) {
 static void writeRange(FILE *out, unsigned int (*ranges)[2], size_t range_count) {
   fprintf(out, "[");
 
-  for (size_t i = 0; i < range_count; i++) {
-    fprintf(out, "[%d,%d]", ranges[i][0], ranges[i][1]);
+  if (range_count != 0) fprintf(out, "%d,%d", ranges[0][0], ranges[0][1] - ranges[0][0]);
+  if (range_count > 1) fprintf(out, ",");
+
+  for (size_t i = 1; i < range_count; i++) {
+    fprintf(out, "%d,%d", ranges[i][0] - ranges[i - 1][1], ranges[i][1] - ranges[i][0]);
     if (i != range_count - 1) fprintf(out, ",");
   }
 
