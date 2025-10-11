@@ -1,6 +1,7 @@
 # folders
 node_modules/
 dist/
+glibc/
 
 # files
 .DS_Store
