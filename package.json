@@ -1,6 +1,6 @@
 {
   "name": "wcwidth-o1",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "glibc wcwidth/wcswidth for Node.js & TypeScript.",
   "keywords": [
     "glibc",
