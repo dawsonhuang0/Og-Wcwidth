@@ -165,7 +165,7 @@ int main(void) {
 
   fprintf(
     out,
-    "\nfor (const cp of cp0) widths[cp] = 0;"
+    "\n\nfor (const cp of cp0) widths[cp] = 0;"
     "\nfor (const cp of cp1) widths[cp] = 1;"
     "\nfor (const cp of cp2) widths[cp] = 2;\n"
     "\nfor (const [start, end] of range0)"
@@ -272,23 +272,23 @@ static void pushCP(unsigned int **arr, size_t *count, size_t *capacity, unsigned
 }
 
 static void writeCP(FILE *out, unsigned int *codepoints, size_t cp_count) {
-  fprintf(out, "[\n  ");
+  fprintf(out, "[");
 
   for (size_t i = 0; i < cp_count; i++) {
-    fprintf(out, "0x%06X", codepoints[i]);
-    if (i != cp_count - 1) fprintf(out, (i + 1) % 7 == 0 ? ",\n  " : ", ");
+    fprintf(out, "%d", codepoints[i]);
+    if (i != cp_count - 1) fprintf(out, ",");
   }
 
-  fprintf(out, "\n];\n");
+  fprintf(out, "];");
 }
 
 static void writeRange(FILE *out, unsigned int (*ranges)[2], size_t range_count) {
-  fprintf(out, "[\n  ");
+  fprintf(out, "[");
 
   for (size_t i = 0; i < range_count; i++) {
-    fprintf(out, "[0x%06X, 0x%06X]", ranges[i][0], ranges[i][1]);
-    if (i != range_count - 1) fprintf(out, (i + 1) % 3 == 0 ? ",\n  " : ", ");
+    fprintf(out, "[%d,%d]", ranges[i][0], ranges[i][1]);
+    if (i != range_count - 1) fprintf(out, ",");
   }
 
-  fprintf(out, "\n];\n");
+  fprintf(out, "];");
 }
