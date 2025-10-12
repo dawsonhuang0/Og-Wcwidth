@@ -47,7 +47,7 @@ int main(void) {
 
   fprintf(
     out,
-    "/* Auto-generated lookup table generator from glibc's wcwidth results */\n"
+    "/* Auto-generated lookup table from glibc's wcwidth results */\n"
     "\n// ---------- Build widths array ----------"
     "\nconst MAX_CP = 0x10FFFF;"
     "\nconst widths = new Uint8Array(MAX_CP + 1);\n"

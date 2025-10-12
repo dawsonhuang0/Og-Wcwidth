@@ -1,4 +1,4 @@
-/* Auto-generated lookup table generator from glibc's wcwidth results */
+/* Auto-generated lookup table from glibc's wcwidth results */
 
 // ---------- Build widths array ----------
 const MAX_CP = 0x10FFFF;
