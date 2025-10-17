@@ -30,17 +30,16 @@ export function wcwidth(char: string): number {
 export function wcswidth(str: string, n?: number): number {
   if (!str) return 0;
 
+  const chars = Array.from(str);
   let width = 0;
-  let count = 0;
 
-  for (const char of str) {
-    if (n !== undefined && count >= n) break;
+  for (let i = 0; i < chars.length; i++) {
+    if (n !== undefined && i >= n) break;
 
-    const w = wcwidth(char);
-    if (w === -1) return -1;
+    const w = wcwidth(chars[i]);
+    if (w < 0) return -1;
 
     width += w;
-    count++;
   }
 
   return width;
